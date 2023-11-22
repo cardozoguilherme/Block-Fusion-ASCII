@@ -32,7 +32,7 @@ O jogo foi testado em uma máquina virtual com o sistema operacional Ubuntu na v
 
 # Contribuidores 👨‍👩‍👧‍👦
 <a href="https://github.com/cardozoguilherme/Block-Fusion-ASCII.git">
-  <img src="https://github.com/cardozoguilherme/Block-Fusion-ASCII.git" />
+  <img src="https://contrib.rocks/image?repo=cardozoguilherme/Block-Fusion-ASCII" />
 </a>
 <p><a href="https://github.com/claudioavgo">Cláudio Alves</a> - cago@cesar.school 📩</p>
 <p><a href="https://github.com/leooghub">Leonardo Cardoso</a> - lccg@cesar.school 📩</p> 
