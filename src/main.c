@@ -25,7 +25,6 @@ int bloco = 0;
 struct Player
 {
     int pontos;
-    int id;
     char nome[30];
 };
 
@@ -300,12 +299,10 @@ int main()
 
     printf("Nome do primeiro jogador: ");
     scanf("%s", players[0].nome);
-    players[0].id = 0;
     players[0].pontos = 0;
 
     printf("Nome do segundo jogador: ");
     scanf("%s", players[1].nome);
-    players[1].id = 1;
     players[1].pontos = 0;
 
     // Inicializa a lista dos blocos (placed)
@@ -468,16 +465,6 @@ int main()
                 incY = 2;
                 incX = 12;
                 wait = 0;
-
-                if(players[jogador_da_vez].pontos == 100)
-                {
-                keyboardDestroy();
-                screenDestroy();
-                timerDestroy();
-                printf("Jogador %s venceu o jogo!\n\n\n", players[jogador_da_vez].nome);
-
-                return 0;
-                }
 
                 if (!dest_bloco) {
                     jogador_da_vez = !jogador_da_vez;
