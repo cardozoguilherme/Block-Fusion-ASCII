@@ -318,10 +318,7 @@ int main()
 
     int wait = 0;
     int wait_limit = 5;
-    int quebrou = 0;
-    int aguardando_jogador = 0;
     int jogador_da_vez = 0;
-    int vez_do_proximo = 1;
 
     // Roda o jogo até o input do enter
     while (ch != 10) // se o input for enter, ele para o jogo
