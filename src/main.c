@@ -469,6 +469,16 @@ int main()
                 incX = 12;
                 wait = 0;
 
+                if(players[jogador_da_vez].pontos == 10)
+                {
+                keyboardDestroy();
+                screenDestroy();
+                timerDestroy();
+                printf("Jogador %s venceu o jogo!\n\n\n", players[jogador_da_vez].nome);
+
+                return 0;
+                }
+
                 if (!dest_bloco) {
                     jogador_da_vez = !jogador_da_vez;
                 }
