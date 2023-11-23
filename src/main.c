@@ -469,7 +469,7 @@ int main()
                 incX = 12;
                 wait = 0;
 
-                if(players[jogador_da_vez].pontos == 10)
+                if(players[jogador_da_vez].pontos == 100)
                 {
                 keyboardDestroy();
                 screenDestroy();
