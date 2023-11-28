@@ -12,19 +12,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
 #define RIGHT 100
 #define LEFT 97
 #define DOWN 115
-#define SPACE 32
+#define RIGHT_ARROW 54
+#define LEFT_ARROW 52
+#define DOWN_ARROW 53
 
-int x = 12, y = 2;
-int incX = 12, incY = 2;
+int x = 7, y = 2;
+int incX = 7, incY = 2;
 int bloco = 0;
 
 struct Player
 {
     int pontos;
+    int id;
     char nome[30];
 };
 
@@ -277,16 +281,16 @@ void printScore(char nome_jogador1[30], int pontos_jogador1, char nome_jogador2[
 
     if (jogador_da_vez) {
         screenSetColor(YELLOW, DARKGRAY);
-        printf("| (JOGADOR %s) Pontos: %d", nome_jogador1, pontos_jogador1);
+        printf("| (JOGADOR(A) %s) Pontos: %d", nome_jogador1, pontos_jogador1);
         screenGotoxy(MAXX, 2);
         screenSetColor(LIGHTMAGENTA, DARKGRAY);
-        printf("> (JOGADOR %s) Pontos: %d", nome_jogador2, pontos_jogador2);
+        printf("> (JOGADOR(A) %s) Pontos: %d", nome_jogador2, pontos_jogador2);
     } else {
         screenSetColor(LIGHTMAGENTA, DARKGRAY);
-        printf("> (JOGADOR %s) Pontos: %d\n", nome_jogador1, pontos_jogador1);
+        printf("> (JOGADOR(A) %s) Pontos: %d\n", nome_jogador1, pontos_jogador1);
         screenGotoxy(MAXX, 2);
         screenSetColor(YELLOW, DARKGRAY);
-        printf("| (JOGADOR %s) Pontos: %d", nome_jogador2, pontos_jogador2);
+        printf("| (JOGADOR(A) %s) Pontos: %d", nome_jogador2, pontos_jogador2);
     }
 }
 
@@ -294,14 +298,30 @@ int main()
 {
     static int ch = 0;
 
+    printf("▀█████████▄   ▄█        ▄██████▄   ▄████████    ▄█   ▄█▄         ▄████████ ███    █▄     ▄████████  ▄█   ▄██████▄  ███▄▄▄▄   \n");
+    sleep(1);
+    printf("  ███    ███ ███       ███    ███ ███    ███   ███ ▄███▀        ███    ███ ███    ███   ███    ███ ███  ███    ███ ███▀▀▀██▄ \n");
+    sleep(1);
+    printf("  ███    ███ ███       ███    ███ ███    █▀    ███▐██▀          ███    █▀  ███    ███   ███    █▀  ███▌ ███    ███ ███   ███ \n");
+    sleep(1);
+    printf(" ▄███▄▄▄██▀  ███       ███    ███ ███         ▄█████▀          ▄███▄▄▄     ███    ███   ███        ███▌ ███    ███ ███   ███ \n");
+    sleep(1);
+    printf("▀▀███▀▀▀██▄  ███       ███    ███ ███        ▀▀█████▄         ▀▀███▀▀▀     ███    ███ ▀███████████ ███▌ ███    ███ ███   ███ \n");
+    sleep(1);
+    printf("  ███    ██▄ ███       ███    ███ ███    █▄    ███▐██▄          ███        ███    ███          ███ ███  ███    ███ ███   ███ \n");
+    sleep(1);
+    printf("  ███    ███ ███▌    ▄ ███    ███ ███    ███   ███ ▀███▄        ███        ███    ███    ▄█    ███ ███  ███    ███ ███   ███ \n");
+    sleep(1);
+    printf("▄█████████▀  █████▄▄██  ▀██████▀  ████████▀    ███   ▀█▀        ███        ████████▀   ▄████████▀  █▀    ▀██████▀   ▀█   █▀  \n");
+
     // Coletando o nome do primeiro jogador
     struct Player players[2];
 
-    printf("Nome do primeiro jogador: ");
+    printf("✦ Nome do(a) primeiro(a) jogador(a): ");
     scanf("%s", players[0].nome);
     players[0].pontos = 0;
 
-    printf("Nome do segundo jogador: ");
+    printf("✦ Nome do(a) segundo(a) jogador(a): ");
     scanf("%s", players[1].nome);
     players[1].pontos = 0;
 
@@ -318,10 +338,13 @@ int main()
 
     int wait = 0;
     int wait_limit = 5;
+    int quebrou = 0;
+    int aguardando_jogador = 0;
     int jogador_da_vez = 0;
+    int vez_do_proximo = 1;
 
     // Roda o jogo até o input do enter
-    while (ch != 10) // se o input for enter, ele para o jogo
+    while (ch != 27) // se o input for enter, ele para o jogo
     {   
         
         // Handle user input
@@ -330,21 +353,40 @@ int main()
             // TECLA DO TECLADO (CÓDIGO)
             ch = readch();
 
-            // Se o usuário apertar o A, ele vai para a esquerda
-            if (ch == LEFT && incX != 2 && checkCollisionLeft(head, incX, incY) != 1)
-            {
-                // Decrementa no X (BLOCO EM ANDAMENTO)
-                incX--;
-            }
-            // Se o usuário apertar o D, ele vai para direita
-            else if (ch == RIGHT && incX != MAXX - 2 && checkCollisionRight(head, incX, incY) != 1)
-            {
-                incX++;
-            }
-            // Se o usuário apertar o S, ele vai para baixo
-            else if (ch == DOWN && incY != MAXY - 1 && checkCollisionDown(head, incX, incY) != 1 && wait_limit == 2)
-            {
-                incY++;
+            if (!jogador_da_vez) {
+                // Se o usuário apertar o A, ele vai para a esquerda
+                if (ch == LEFT && incX != 2 && checkCollisionLeft(head, incX, incY) != 1)
+                {
+                    // Decrementa no X (BLOCO EM ANDAMENTO)
+                    incX--;
+                }
+                // Se o usuário apertar o D, ele vai para direita
+                else if (ch == RIGHT && incX != MAXX - 2 && checkCollisionRight(head, incX, incY) != 1)
+                {
+                    incX++;
+                }
+                // Se o usuário apertar o S, ele vai para baixo
+                else if (ch == DOWN && incY != MAXY - 1 && checkCollisionDown(head, incX, incY) != 1 && wait_limit == 2)
+                {
+                    incY++;
+                }
+            } else {
+                // Se o usuário apertar o A, ele vai para a esquerda
+                if (ch == LEFT_ARROW && incX != 2 && checkCollisionLeft(head, incX, incY) != 1)
+                {
+                    // Decrementa no X (BLOCO EM ANDAMENTO)
+                    incX--;
+                }
+                // Se o usuário apertar o D, ele vai para direita
+                else if (ch == RIGHT_ARROW && incX != MAXX - 2 && checkCollisionRight(head, incX, incY) != 1)
+                {
+                    incX++;
+                }
+                // Se o usuário apertar o S, ele vai para baixo
+                else if (ch == DOWN_ARROW && incY != MAXY - 1 && checkCollisionDown(head, incX, incY) != 1 && wait_limit == 2)
+                {
+                    incY++;
+                }
             }
         }
 
@@ -460,14 +502,23 @@ int main()
                 // printf("%d", indx);
 
                 incY = 2;
-                incX = 12;
+                incX = 7;
                 wait = 0;
+                
+                if(players[jogador_da_vez].pontos == 100)
+                {
+                    keyboardDestroy();
+                    screenDestroy();
+                    timerDestroy();
+                    printf("O(a) jogador(a) %s venceu o jogo!\n\n\n", players[jogador_da_vez].nome);
+
+                    return 0;
+                }
 
                 if (!dest_bloco) {
                     jogador_da_vez = !jogador_da_vez;
                 }
-                
-                wait_limit=30;
+                wait_limit=80;
             }
 
             wait++;
