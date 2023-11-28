@@ -43,16 +43,15 @@
 #define BOX_DOT        0x7E
 
 // screen constants
-#define SCRSTARTX      1      // Initial and final screen positions for the game
-#define SCRENDX        10     // It means the area that can be drawn 
+#define SCRSTARTX      3      // Initial and final screen positions for the game
+#define SCRENDX        20     // It means the area that can be drawn 
 #define SCRSTARTY      1
-#define SCRENDY        20
+#define SCRENDY        23
 
-// Border
 #define MINX           1      // min screen horizontal pos
 #define MINY           1      // min screen vertical pos
-#define MAXX           24     // max screen horizontal pos
-#define MAXY           18     // max screen vertical pos
+#define MAXX           14     // max screen horizontal pos
+#define MAXY           24     // max screen vertical pos
 
 /**
  * Screen Colors type
